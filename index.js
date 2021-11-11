@@ -19,13 +19,17 @@ const typeDefs = gql`
     type Query {
         bookCount: Int!
         authorCount: Int!
+        allAuthors: Int!
     }
 `
-
+// allAuthors, returns details about all authors. Should include a field bookCount containing the number of books the author has written. 
 const resolvers = {
     Query: {
         bookCount: () => books.length, 
-        authorCount: () => authors.length
+        authorCount: () => authors.length, 
+        allAuthors: () => {
+            return 3; 
+        }
     }
 }
 
