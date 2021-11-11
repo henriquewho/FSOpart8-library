@@ -13,26 +13,36 @@ const typeDefs = gql`
     }
     type Author {
         name: String!
-        born: String
+        born: Int
         id: ID!
+        bookCount: Int
     }
     type Query {
         bookCount: Int!
         authorCount: Int!
-        allBooks: [Book!]!
-        allAuthors: Int!
+        allBooks(author: String): [Book!]!
+        allAuthors: [Author!]!
     }
 `
-// allAuthors, returns details about all authors. Should include a field bookCount containing the number of books the author has written. 
 const resolvers = {
     Query: {
         bookCount: () => books.length, 
         authorCount: () => authors.length, 
-        allBooks: ()=> {
-            return books
+        
+        allBooks: (root, args)=> {
+            if (!args.author) return books
+            return books.filter(each => each.author === args.author)
         },
+
         allAuthors: () => {
-            return 3; 
+            return authors
+        }
+    }, 
+    
+    Author: {
+        bookCount: (root) =>{
+            return books.reduce( (acc, curr) => 
+            (root.name==curr.author) ? ++acc : acc, 0)
         }
     }
 }
